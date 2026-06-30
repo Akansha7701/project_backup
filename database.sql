@@ -9,10 +9,16 @@ CREATE TABLE users(
 
 CREATE TABLE documents(
     id SERIAL PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    file_path TEXT NOT NULL,
+    -- title VARCHAR(255) NOT NULL,
+    -- file_path TEXT NOT NULL,
+    -- uploaded_by INTEGER REFERENCES users(id),
+    -- created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+    filename VARCHAR(255) NOT NULL,
+    filetype VARCHAR(100),
+    filepath TEXT NOT NULL,
     uploaded_by INTEGER REFERENCES users(id),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    upload_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE chat_history(

@@ -101,7 +101,7 @@ function Dashboard() {
 
           <DashboardCard
             title="Recent Activity"
-            value={`${queryCount} Activities`}
+            value={`${documentsCount} Activities`}
             icon={<FaHistory />}
           />
         </div>

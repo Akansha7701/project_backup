@@ -13,7 +13,8 @@ function RecentActivity() {
       const token = localStorage.getItem("token");
 
       const response = await axios.get(
-        "http://localhost:5000/api/query/history",
+        // "http://localhost:5000/api/query/history",
+        "http://localhost:5000/api/documents",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -39,7 +40,8 @@ function RecentActivity() {
         <ul className="space-y-3">
           {activities.map((item) => (
             <li key={item.id}>
-              ❓ {item.query}
+              {/* ❓ {item.query} */}
+              {item.filename} uploaded
             </li>
           ))}
         </ul>

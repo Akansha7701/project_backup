@@ -1,4 +1,5 @@
-import { Link, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { FaBars } from "react-icons/fa";
 import {
   FaHome,
   FaFileAlt,
@@ -6,99 +7,123 @@ import {
   FaUser,
   FaSignOutAlt,
   FaComments,
+  FaShieldAlt,
 } from "react-icons/fa";
 
-function Sidebar() {
+function Sidebar({ collapsed, setCollapsed }) {
   const role = localStorage.getItem("role");
+
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
-
+    localStorage.clear();
     navigate("/login");
   };
 
+  const navClass = ({ isActive }) =>
+    `flex items-center py-3 rounded-xl transition-all duration-300 ${
+      collapsed ? "justify-center px-0" : "justify-start gap-3 px-4"
+    } ${
+      isActive
+        ? "bg-blue-600 text-white shadow-lg"
+        : "text-gray-300 hover:bg-slate-800 hover:text-white"
+    }`;
+
   return (
-    <aside className="w-64 bg-slate-900 text-white min-h-screen">
-      <div className="p-6 border-b border-slate-700">
-        <h2 className="text-xl font-bold">DRDO Assistant</h2>
+    <aside
+      className={`fixed left-0 top-0 h-screen bg-slate-900 text-white flex flex-col shadow-xl z-50 transition-all duration-300 ${
+        collapsed ? "w-20" : "w-64"
+      }`}
+    >
+      <div
+        className={`flex p-3 ${collapsed ? "justify-center" : "justify-end"}`}
+      >
+        <button
+          onClick={() => setCollapsed(!collapsed)}
+          className="text-white hover:text-blue-400"
+        >
+          <FaBars size={20} />
+        </button>
       </div>
 
-      <nav className="p-4">
-        <ul className="space-y-4">
+      {/* Logo */}
+
+      <div className={`border-b border-slate-800 ${collapsed ? "p-4" : "p-6"}`}>
+        <div
+          className={`flex items-center ${
+            collapsed ? "justify-center" : "gap-3"
+          }`}
+        >
+          {!collapsed && (
+            <div>
+              <h2 className="text-xl font-bold">DRDO Assistant</h2>
+
+              <p className="text-xs text-gray-400">Secure Document Portal</p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <nav className="flex-1 p-4">
+        <ul className="space-y-3">
           <li>
-            <Link
-              to="/"
-              className="flex items-center gap-3 hover:text-blue-400"
-            >
+            <NavLink to="/" end className={navClass}>
               <FaHome />
-              Dashboard
-            </Link>
+              {!collapsed && <span>Dashboard</span>}
+            </NavLink>
           </li>
 
           {role === "admin" && (
             <>
               <li>
-                <Link
-                  to="/documents"
-                  className="flex items-center gap-3 hover:text-blue-400"
-                >
+                <NavLink to="/documents" className={navClass}>
                   <FaFileAlt />
-                  Documents
-                </Link>
+                  {!collapsed && <span>Documents</span>}
+                </NavLink>
               </li>
 
               <li>
-                <Link
-                  to="/upload"
-                  className="flex items-center gap-3 hover:text-blue-400"
-                >
+                <NavLink to="/upload" className={navClass}>
                   <FaUpload />
-                  Upload
-                </Link>
+                  {!collapsed && <span>Upload</span>}
+                </NavLink>
               </li>
 
               <li>
-                <Link
-                  to="/query"
-                  className="flex items-center gap-3 hover:text-blue-400"
-                >
+                <NavLink to="/query" className={navClass}>
                   <FaComments />
-                  Query
-                </Link>
+                  {!collapsed && <span>Query</span>}
+                </NavLink>
               </li>
             </>
           )}
 
           {role === "user" && (
             <li>
-              <Link
-                to="/query"
-                className="flex items-center gap-3 hover:text-blue-400"
-              >
+              <NavLink to="/query" className={navClass}>
                 <FaComments />
-                Query
-              </Link>
+                {!collapsed && <span>Query</span>}
+              </NavLink>
             </li>
           )}
 
           <li>
-            <Link
-              to="/profile"
-              className="flex items-center gap-3 hover:text-blue-400"
-            >
+            <NavLink to="/profile" className={navClass}>
               <FaUser />
-              Profile
-            </Link>
+              {!collapsed && <span>Profile</span>}
+            </NavLink>
           </li>
 
-          <li
-            onClick={handleLogout}
-            className="flex items-center gap-3 cursor-pointer hover:text-red-400"
-          >
-            <FaSignOutAlt />
-            Logout
+          <li>
+            <button
+              onClick={handleLogout}
+              className={`w-full flex items-center py-3 rounded-xl transition-all duration-300 ${
+                collapsed ? "justify-center" : "justify-start gap-3 px-4"
+              } text-gray-300 hover:bg-red-500 hover:text-white`}
+            >
+              <FaSignOutAlt />
+              {!collapsed && <span>Logout</span>}
+            </button>
           </li>
         </ul>
       </nav>

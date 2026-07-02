@@ -1,27 +1,51 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import axios from "axios";
-import MainLayout from "../layouts/MainLayout";
+import toast from "react-hot-toast";
+import { motion } from "framer-motion";
+import {
+  FaRobot,
+  FaUser,
+  FaPaperPlane,
+} from "react-icons/fa";
 
 function Query() {
   const [question, setQuestion] = useState("");
-  const [response, setResponse] = useState("");
+  const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  const chatEndRef = useRef(null);
+
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({
+      behavior: "smooth",
+    });
+  }, [messages, loading]);
 
   const handleAsk = async () => {
     if (!question.trim()) {
-      alert("Please enter a question");
+      toast.error("Please enter a question");
       return;
     }
 
-    try {
-      setLoading(true);
+    const userMessage = {
+      sender: "user",
+      text: question,
+    };
 
+    setMessages((prev) => [...prev, userMessage]);
+
+    const currentQuestion = question;
+
+    setQuestion("");
+    setLoading(true);
+
+    try {
       const token = localStorage.getItem("token");
 
       const result = await axios.post(
         "http://localhost:5000/api/query",
         {
-          question,
+          question: currentQuestion,
         },
         {
           headers: {
@@ -30,55 +54,200 @@ function Query() {
         }
       );
 
-      setResponse(result.data.answer);
-
-      setLoading(false);
+      setMessages((prev) => [
+        ...prev,
+        {
+          sender: "bot",
+          text: result.data.answer,
+        },
+      ]);
     } catch (error) {
-      console.error(error);
-
-      alert("Failed to process query");
-
+      console.log(error);
+      toast.error("Failed to process query");
+    } finally {
       setLoading(false);
     }
   };
 
   return (
-    <MainLayout>
-      <div className="p-6">
-        <h1 className="text-3xl font-bold mb-6">
-          Ask Query
-        </h1>
+    <div className="max-w-6xl mx-auto h-[82vh] flex flex-col">
 
-        <div className="bg-white rounded-xl shadow-md p-6">
-          <textarea
-            className="w-full border p-3 rounded-lg"
-            rows="5"
-            placeholder="Enter your question..."
-            value={question}
-            onChange={(e) =>
-              setQuestion(e.target.value)
-            }
-          />
+      {/* Header */}
 
-          <button
-            onClick={handleAsk}
-            className="mt-4 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
-          >
-            {loading ? "Generating..." : "Ask"}
-          </button>
-        </div>
+      <div className="mb-6">
+        {/* <h1 className="text-4xl font-bold text-gray-800">
+          DRDO AI Assistant
+        </h1> */}
 
-        {response && (
-          <div className="mt-6 bg-white rounded-xl shadow-md p-6">
-            <h2 className="text-xl font-bold mb-3">
-              Response
+        <p className="text-gray-500 mt-2">
+          Ask questions about uploaded documents.
+        </p>
+      </div>
+
+      {/* Chat Box */}
+
+      <div className="flex-1 bg-white rounded-3xl shadow-xl border border-gray-200 flex flex-col overflow-hidden">
+
+        {/* Top */}
+
+        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-5 flex items-center gap-3">
+
+          <FaRobot size={24} />
+
+          <div>
+            <h2 className="font-semibold text-lg">
+              DRDO Assistant
             </h2>
 
-            <p>{response}</p>
+            <p className="text-blue-100 text-sm">
+              Online
+            </p>
           </div>
-        )}
+
+        </div>
+
+        {/* Messages */}
+
+        <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-gray-50">
+
+          {messages.length === 0 && (
+
+            <div className="text-center mt-20">
+
+              <FaRobot className="mx-auto text-6xl text-blue-500 mb-4" />
+
+              <h2 className="text-2xl font-bold text-gray-700">
+                Start a Conversation
+              </h2>
+
+              <p className="text-gray-500 mt-2">
+                Ask anything about your uploaded documents.
+              </p>
+
+            </div>
+
+          )}
+
+          {messages.map((msg, index) => (
+
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              className={`flex ${
+                msg.sender === "user"
+                  ? "justify-end"
+                  : "justify-start"
+              }`}
+            >
+
+              <div
+                className={`flex items-start gap-3 max-w-[75%] ${
+                  msg.sender === "user"
+                    ? "flex-row-reverse"
+                    : ""
+                }`}
+              >
+
+                <div
+                  className={`w-10 h-10 rounded-full flex items-center justify-center text-white ${
+                    msg.sender === "user"
+                      ? "bg-blue-600"
+                      : "bg-indigo-600"
+                  }`}
+                >
+                  {msg.sender === "user" ? (
+                    <FaUser />
+                  ) : (
+                    <FaRobot />
+                  )}
+                </div>
+
+                <div
+                  className={`rounded-2xl px-5 py-4 shadow ${
+                    msg.sender === "user"
+                      ? "bg-blue-600 text-white"
+                      : "bg-white border border-gray-200"
+                  }`}
+                >
+                  <p className="whitespace-pre-wrap">
+                    {msg.text}
+                  </p>
+                </div>
+
+              </div>
+
+            </motion.div>
+
+          ))}
+
+          {/* Typing Animation */}
+
+          {loading && (
+
+            <div className="flex items-start gap-3">
+
+              <div className="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center text-white">
+                <FaRobot />
+              </div>
+
+              <div className="bg-white border rounded-2xl px-5 py-4 shadow">
+
+                <div className="flex gap-2">
+
+                  <span className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></span>
+
+                  <span className="w-2 h-2 bg-gray-500 rounded-full animate-bounce [animation-delay:150ms]"></span>
+
+                  <span className="w-2 h-2 bg-gray-500 rounded-full animate-bounce [animation-delay:300ms]"></span>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          )}
+
+          <div ref={chatEndRef}></div>
+
+        </div>
+
+        {/* Input */}
+
+        <div className="border-t bg-white p-5">
+
+          <div className="flex gap-4">
+
+            <textarea
+              rows={2}
+              value={question}
+              onChange={(e) => setQuestion(e.target.value)}
+              placeholder="Ask anything..."
+              className="flex-1 border rounded-2xl p-4 resize-none focus:ring-2 focus:ring-blue-500 outline-none"
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  handleAsk();
+                }
+              }}
+            />
+
+            <button
+              onClick={handleAsk}
+              disabled={loading}
+              className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white w-16 rounded-2xl flex items-center justify-center hover:scale-105 transition disabled:opacity-50"
+            >
+              <FaPaperPlane size={20} />
+            </button>
+
+          </div>
+
+        </div>
+
       </div>
-    </MainLayout>
+
+    </div>
   );
 }
 

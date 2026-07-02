@@ -1,19 +1,19 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-import Sidebar from "../components/Sidebar";
 import DashboardCard from "../components/DashboardCard";
 import RecentActivity from "../components/RecentActivity";
-import Navbar from "../components/Navbar";
 
-import { FaFileAlt, FaUpload, FaComments, FaHistory } from "react-icons/fa";
+import {
+  FaFileAlt,
+  FaComments,
+  FaHistory,
+} from "react-icons/fa";
 
 function Dashboard() {
   const [documentsCount, setDocumentsCount] = useState(0);
-  const [latestUpload, setLatestUpload] = useState("None");
-
+  const [latestUpload, setLatestUpload] = useState("No documents uploaded");
   const [queryCount, setQueryCount] = useState(0);
-  const [activities, setActivities] = useState([]);
 
   const role = localStorage.getItem("role");
 
@@ -26,11 +26,14 @@ function Dashboard() {
     try {
       const token = localStorage.getItem("token");
 
-      const response = await axios.get("http://localhost:5000/api/documents", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        "http://localhost:5000/api/documents",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       const docs = response.data;
 
@@ -54,63 +57,97 @@ function Dashboard() {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        },
+        }
       );
 
       setQueryCount(response.data.length);
-
-      setActivities(response.data);
     } catch (error) {
       console.log(error);
     }
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
-      <Sidebar />
+    <>
+      {/* Welcome Banner */}
 
-      <main className="flex-1 p-6">
-        <Navbar />
+      <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 rounded-3xl py-8 px-8 shadow-xl mb-8 text-white">
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-4xl font-bold">
+              {role === "admin"
+                ? "Admin Dashboard"
+                : "Welcome Back!"}
+            </h1>
 
-        <h1 className="text-3xl font-bold mb-6">
-          {role === "admin" ? "Admin Dashboard" : "User Dashboard"}
-        </h1>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <DashboardCard
-            title={role === "admin" ? "Total Documents" : "Available Documents"}
-            value={documentsCount}
-            icon={<FaFileAlt />}
-          />
-
-          <DashboardCard
-            title={role === "admin" ? "Total Queries" : "My Queries"}
-            value={queryCount}
-            icon={<FaComments />}
-          />
-
-          <DashboardCard
-            title={role === "admin" ? "Latest Upload" : "Latest Document"}
-            value={
-              latestUpload.length > 20
-                ? latestUpload.substring(0, 20) + "..."
-                : latestUpload
-            }
-            icon={<FaUpload />}
-          />
-
-          <DashboardCard
-            title="Recent Activity"
-            value={`${documentsCount} Activities`}
-            icon={<FaHistory />}
-          />
+            <p className="mt-3 text-lg text-blue-100">
+              {role === "admin"
+                ? "Manage documents, monitor AI queries and oversee the complete document management system."
+                : "Access documents, submit AI queries and manage your profile securely."}
+            </p>
+          </div>
         </div>
+      </div>
 
-        <div className="mt-8">
-          <RecentActivity />
+      {/* Dashboard Cards */}
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <DashboardCard
+          title={
+            role === "admin"
+              ? "Total Documents"
+              : "Available Documents"
+          }
+          value={documentsCount}
+          icon={<FaFileAlt />}
+        />
+
+        <DashboardCard
+          title={
+            role === "admin"
+              ? "Total Queries"
+              : "My Queries"
+          }
+          value={queryCount}
+          icon={<FaComments />}
+        />
+
+        <DashboardCard
+          title="Recent Activity"
+          value={documentsCount}
+          icon={<FaHistory />}
+        />
+      </div>
+
+      {/* Latest Uploaded Document */}
+
+      <div className="bg-white rounded-2xl shadow-md mt-8 p-6 border border-gray-100">
+        <h2 className="text-xl font-bold text-gray-800 mb-4">
+          Latest Uploaded Document
+        </h2>
+
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-lg font-semibold text-gray-700 break-all">
+              {latestUpload}
+            </p>
+
+            <p className="text-sm text-gray-500 mt-2">
+              Most recently uploaded document
+            </p>
+          </div>
+
+          <div className="bg-blue-100 text-blue-600 p-4 rounded-xl">
+            <FaFileAlt size={28} />
+          </div>
         </div>
-      </main>
-    </div>
+      </div>
+
+      {/* Recent Activity */}
+
+      <div className="mt-8">
+        <RecentActivity />
+      </div>
+    </>
   );
 }
 

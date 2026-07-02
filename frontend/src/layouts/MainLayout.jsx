@@ -1,12 +1,26 @@
+import { Outlet } from "react-router-dom";
+import { useState } from "react";
 import Sidebar from "../components/Sidebar";
+import Navbar from "../components/Navbar";
 
-function MainLayout({ children }) {
+function MainLayout() {
+  const [collapsed, setCollapsed] = useState(false);
+
   return (
-    <div className="flex min-h-screen bg-gray-100">
-      <Sidebar />
+    <div className="min-h-screen bg-gray-100">
+      <Sidebar
+        collapsed={collapsed}
+        setCollapsed={setCollapsed}
+      />
 
-      <main className="flex-1">
-        {children}
+      <Navbar collapsed={collapsed} />
+
+      <main
+        className={`transition-all duration-300 pt-24 px-6 pb-6 ${
+          collapsed ? "ml-20" : "ml-64"
+        }`}
+      >
+        <Outlet />
       </main>
     </div>
   );

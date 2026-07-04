@@ -1,4 +1,6 @@
 const pool = require("../config/db");
+const fs = require("fs");
+const path = require("path");
 
 const uploadDocument = async (req, res) => {
   try {
@@ -17,7 +19,7 @@ const uploadDocument = async (req, res) => {
         filepath,
         uploaded_by
       )
-      VALUES ($1,$2,$3,$4)
+      VALUES ($1, $2, $3, $4)
       RETURNING *
       `,
       [
@@ -32,7 +34,6 @@ const uploadDocument = async (req, res) => {
       message: "File uploaded successfully",
       document: result.rows[0],
     });
-
   } catch (error) {
     console.error(error);
 
@@ -53,7 +54,6 @@ const getDocuments = async (req, res) => {
     );
 
     res.status(200).json(result.rows);
-
   } catch (error) {
     console.error(error);
 
@@ -62,10 +62,6 @@ const getDocuments = async (req, res) => {
     });
   }
 };
-
-
-
-const fs = require("fs");
 
 const deleteDocument = async (req, res) => {
   try {
@@ -104,7 +100,6 @@ const deleteDocument = async (req, res) => {
     res.status(200).json({
       message: "Document deleted successfully",
     });
-
   } catch (error) {
     console.error(error);
 
@@ -114,8 +109,38 @@ const deleteDocument = async (req, res) => {
   }
 };
 
+const viewDocument = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const result = await pool.query(
+      `
+      SELECT *
+      FROM documents
+      WHERE id = $1
+      `,
+      [id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({
+        message: "Document not found",
+      });
+    }
+
+    res.sendFile(path.resolve(result.rows[0].filepath));
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      message: "Unable to open document",
+    });
+  }
+};
+
 module.exports = {
   uploadDocument,
   getDocuments,
   deleteDocument,
+  viewDocument,
 };

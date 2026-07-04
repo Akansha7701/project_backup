@@ -83,7 +83,7 @@ import { Routes, Route } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import Documents from "./pages/Documents";
 import UploadDocument from "./pages/UploadDocument";
-import Profile from "./pages/Profile";
+// import Profile from "./pages/Profile";
 import Query from "./pages/Query";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -96,7 +96,7 @@ function App() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
+      {/* <Route path="/register" element={<Register />} /> */}
 
       <Route
         element={
@@ -125,7 +125,7 @@ function App() {
           }
         />
 
-        <Route path="/profile" element={<Profile />} />
+        {/* <Route path="/profile" element={<Profile />} /> */}
         <Route path="/query" element={<Query />} />
       </Route>
     </Routes>

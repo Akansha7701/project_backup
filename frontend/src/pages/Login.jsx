@@ -207,7 +207,7 @@ function Login() {
             {loading ? "Signing In..." : "Sign In →"}
           </button>
 
-          <p className="mt-6 text-center text-gray-600">
+          {/* <p className="mt-6 text-center text-gray-600">
             Don't have an account?{" "}
             <Link
               to="/register"
@@ -215,7 +215,7 @@ function Login() {
             >
               Register
             </Link>
-          </p>
+          </p> */}
         </motion.form>
       </div>
     </div>

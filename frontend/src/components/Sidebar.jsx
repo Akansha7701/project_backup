@@ -107,12 +107,12 @@ function Sidebar({ collapsed, setCollapsed }) {
             </li>
           )}
 
-          <li>
+          {/* <li>
             <NavLink to="/profile" className={navClass}>
               <FaUser />
               {!collapsed && <span>Profile</span>}
             </NavLink>
-          </li>
+          </li> */}
 
           <li>
             <button

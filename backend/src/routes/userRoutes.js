@@ -11,26 +11,10 @@ const {
   deleteUser,
 } = require("../controllers/userController");
 
+router.post("/", authMiddleware, adminMiddleware, createUser);
 
-router.post(
-  "/",
-  authMiddleware,
-  adminMiddleware,
-  createUser
-);
+router.get("/", authMiddleware, adminMiddleware, getUsers);
 
-router.get(
-  "/",
-  authMiddleware,
-  adminMiddleware,
-  getUsers
-);
-
-router.delete(
-  "/:id",
-  authMiddleware,
-  adminMiddleware,
-  deleteUser
-);
+router.delete("/:id", authMiddleware, adminMiddleware, deleteUser);
 
 module.exports = router;

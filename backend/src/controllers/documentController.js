@@ -2,9 +2,8 @@ const pool = require("../config/db");
 const fs = require("fs");
 const path = require("path");
 
-// ==========================
 // Upload Document
-// ==========================
+
 const uploadDocument = async (req, res) => {
   try {
     console.log("BODY:", req.body);
@@ -38,7 +37,7 @@ const uploadDocument = async (req, res) => {
         req.file.mimetype,
         req.file.path,
         req.user.id,
-      ]
+      ],
     );
 
     res.status(201).json({
@@ -54,9 +53,8 @@ const uploadDocument = async (req, res) => {
   }
 };
 
-// ==========================
 // Get All Documents
-// ==========================
+
 const getDocuments = async (req, res) => {
   try {
     const result = await pool.query(
@@ -71,7 +69,7 @@ const getDocuments = async (req, res) => {
         upload_date
       FROM documents
       ORDER BY upload_date DESC
-      `
+      `,
     );
 
     res.status(200).json(result.rows);
@@ -84,9 +82,8 @@ const getDocuments = async (req, res) => {
   }
 };
 
-// ==========================
 // Delete Document
-// ==========================
+
 const deleteDocument = async (req, res) => {
   try {
     const { id } = req.params;
@@ -98,7 +95,7 @@ const deleteDocument = async (req, res) => {
       WHERE id = $1
       AND uploaded_by = $2
       `,
-      [id, req.user.id]
+      [id, req.user.id],
     );
 
     if (document.rows.length === 0) {
@@ -118,7 +115,7 @@ const deleteDocument = async (req, res) => {
       DELETE FROM documents
       WHERE id = $1
       `,
-      [id]
+      [id],
     );
 
     res.status(200).json({
@@ -133,9 +130,7 @@ const deleteDocument = async (req, res) => {
   }
 };
 
-// ==========================
 // View Document
-// ==========================
 
 const viewDocument = async (req, res) => {
   try {
@@ -145,10 +140,9 @@ const viewDocument = async (req, res) => {
 
     console.log("Document ID:", id);
 
-    const result = await pool.query(
-      "SELECT * FROM documents WHERE id = $1",
-      [id]
-    );
+    const result = await pool.query("SELECT * FROM documents WHERE id = $1", [
+      id,
+    ]);
 
     if (result.rows.length === 0) {
       console.log("Document not found in database");
@@ -170,7 +164,6 @@ const viewDocument = async (req, res) => {
     }
 
     res.sendFile(filePath);
-
   } catch (error) {
     console.error(error);
 

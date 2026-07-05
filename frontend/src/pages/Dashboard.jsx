@@ -1,91 +1,42 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-
 import DashboardCard from "../components/DashboardCard";
 import RecentActivity from "../components/RecentActivity";
 
-import {
-  FaFileAlt,
-  FaComments,
-  FaHistory,
-} from "react-icons/fa";
+import { FaFileAlt, FaComments, FaHistory } from "react-icons/fa";
 
 function Dashboard() {
   const [stats, setStats] = useState({
-  totalUsers: 0,
-  totalDocuments: 0,
-  totalQueries: 0,
-});
+    totalUsers: 0,
+    totalDocuments: 0,
+    totalQueries: 0,
+  });
 
-const role = localStorage.getItem("role");
+  const role = localStorage.getItem("role");
 
   useEffect(() => {
-  fetchDashboardStats();
-}, []);
-
-  // const fetchDocumentsCount = async () => {
-  //   try {
-  //     const token = localStorage.getItem("token");
-
-  //     const response = await axios.get(
-  //       "http://localhost:5000/api/documents",
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       }
-  //     );
-
-  //     const docs = response.data;
-
-  //     setDocumentsCount(docs.length);
-
-  //     if (docs.length > 0) {
-  //       setLatestUpload(docs[0].filename);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
-  // const fetchQueryHistory = async () => {
-  //   try {
-  //     const token = localStorage.getItem("token");
-
-  //     const response = await axios.get(
-  //       "http://localhost:5000/api/query/history",
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       }
-  //     );
-
-  //     setQueryCount(response.data.length);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+    fetchDashboardStats();
+  }, []);
 
   const fetchDashboardStats = async () => {
-  try {
-    const token = localStorage.getItem("token");
+    try {
+      const token = localStorage.getItem("token");
 
-    const response = await axios.get(
-      "http://localhost:5000/api/dashboard/stats",
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const response = await axios.get(
+        "http://localhost:5000/api/dashboard/stats",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      }
-    );
+      );
 
-    setStats(response.data);
-  } catch (error) {
-    console.error(error);
-  }
-};
+      setStats(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <>
@@ -95,9 +46,7 @@ const role = localStorage.getItem("role");
         <div className="flex justify-between items-center">
           <div>
             <h1 className="text-4xl font-bold">
-              {role === "admin"
-                ? "Admin Dashboard"
-                : "Welcome Back!"}
+              {role === "admin" ? "Admin Dashboard" : "Welcome Back!"}
             </h1>
 
             <p className="mt-3 text-lg text-blue-100">
@@ -112,59 +61,29 @@ const role = localStorage.getItem("role");
       {/* Dashboard Cards */}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {role === "admin" && (
+          <DashboardCard
+            title="Total Users"
+            value={stats.totalUsers}
+            icon="👥"
+          />
+        )}
 
-  {role === "admin" && (
-    <DashboardCard
-      title="Total Users"
-      value={stats.totalUsers}
-      icon="👥"
-    />
-  )}
+        <DashboardCard
+          title="Total Documents"
+          value={stats.totalDocuments}
+          icon={<FaFileAlt />}
+        />
 
-  <DashboardCard
-    title="Total Documents"
-    value={stats.totalDocuments}
-    icon={<FaFileAlt />}
-  />
-
-  <DashboardCard
-    title={role === "admin" ? "Total Queries" : "My Queries"}
-    value={stats.totalQueries}
-    icon={<FaComments />}
-  />
-
-</div>
-
-      {/* Latest Uploaded Document */}
-
-      {/* <div className="bg-white rounded-2xl shadow-md mt-8 p-6 border border-gray-100">
-        <h2 className="text-xl font-bold text-gray-800 mb-4">
-          Latest Uploaded Document
-        </h2>
-
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-lg font-semibold text-gray-700 break-all">
-              {latestUpload}
-            </p>
-
-            <p className="text-sm text-gray-500 mt-2">
-              Most recently uploaded document
-            </p>
-          </div>
-
-          <div className="bg-blue-100 text-blue-600 p-4 rounded-xl">
-            <FaFileAlt size={28} />
-          </div>
-        </div>
-      </div> */}
-
-      {/* Recent Activity */}
+        <DashboardCard
+          title={role === "admin" ? "Total Queries" : "My Queries"}
+          value={stats.totalQueries}
+          icon={<FaComments />}
+        />
+      </div>
 
       <div className="mt-8">
-        <RecentActivity
-  activities={stats.recentActivity || []}
-/>
+        <RecentActivity activities={stats.recentActivity || []} />
       </div>
     </>
   );

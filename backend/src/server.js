@@ -4,8 +4,7 @@ const app = require("./app");
 const pool = require("./config/db");
 
 const PORT = process.env.PORT || 5000;
-// const dashboardRoutes = require("./routes/dashboardRoutes");
-// app.use("/api/dashboard", dashboardRoutes);
+
 
 pool.connect()
   .then(() => {

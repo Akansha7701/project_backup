@@ -5,7 +5,7 @@ function Navbar({ collapsed }) {
     <header
       className="fixed top-0 right-0 h-20 bg-white shadow-md z-40 flex items-center justify-between px-8 transition-all duration-300"
       style={{
-        left: collapsed ? "5rem" : "16rem", // 5rem = w-20, 16rem = w-64
+        left: collapsed ? "5rem" : "16rem", 
       }}
     >
       <h2 className="text-2xl font-bold text-gray-800">

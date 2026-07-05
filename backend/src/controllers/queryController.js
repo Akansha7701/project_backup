@@ -14,18 +14,13 @@ const askQuery = async (req, res) => {
       VALUES ($1, $2, $3)
       RETURNING *
       `,
-      [
-        req.user.id,
-        question,
-        dummyResponse,
-      ]
+      [req.user.id, question, dummyResponse],
     );
 
     res.status(200).json({
       answer: dummyResponse,
       chat: result.rows[0],
     });
-
   } catch (error) {
     console.error(error);
 
@@ -44,11 +39,10 @@ const getQueryHistory = async (req, res) => {
       WHERE user_id = $1
       ORDER BY created_at DESC
       `,
-      [req.user.id]
+      [req.user.id],
     );
 
     res.json(result.rows);
-
   } catch (error) {
     console.error(error);
 
@@ -58,8 +52,6 @@ const getQueryHistory = async (req, res) => {
   }
 };
 
-
-
 const clearChatHistory = async (req, res) => {
   try {
     await pool.query(
@@ -67,13 +59,12 @@ const clearChatHistory = async (req, res) => {
       DELETE FROM chat_history
       WHERE user_id = $1
       `,
-      [req.user.id]
+      [req.user.id],
     );
 
     res.status(200).json({
       message: "Chat history cleared successfully",
     });
-
   } catch (error) {
     console.error(error);
 

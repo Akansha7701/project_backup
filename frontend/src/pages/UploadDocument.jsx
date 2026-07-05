@@ -1,10 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
-import {
-  FaCloudUploadAlt,
-  FaFileAlt,
-} from "react-icons/fa";
+import { FaCloudUploadAlt, FaFileAlt } from "react-icons/fa";
 
 function UploadDocument() {
   const [title, setTitle] = useState("");
@@ -39,7 +36,7 @@ function UploadDocument() {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       toast.success(response.data.message);
@@ -54,23 +51,15 @@ function UploadDocument() {
     }
   };
 
-
-
-
-  
-
   return (
     <div className="max-w-4xl mx-auto">
-
       {/* Heading */}
 
       <div className="mb-8">
-        <h1 className="text-4xl font-bold text-gray-800">
-          Upload Document
-        </h1>
+        <h1 className="text-4xl font-bold text-gray-800">Upload Document</h1>
 
         <p className="text-gray-500 mt-2">
-          Securely upload documents to the  Intelligent Document Assistant.
+          Securely upload documents to the Intelligent Document Assistant.
         </p>
       </div>
 
@@ -80,7 +69,6 @@ function UploadDocument() {
         onSubmit={handleUpload}
         className="bg-white rounded-3xl shadow-lg border border-gray-200 p-8"
       >
-
         {/* Document Title */}
 
         <div className="mb-6">
@@ -108,18 +96,13 @@ function UploadDocument() {
             htmlFor="fileUpload"
             className="border-2 border-dashed border-blue-300 rounded-2xl h-64 flex flex-col justify-center items-center cursor-pointer hover:border-blue-600 hover:bg-blue-50 transition"
           >
-            <FaCloudUploadAlt
-              size={60}
-              className="text-blue-600 mb-4"
-            />
+            <FaCloudUploadAlt size={60} className="text-blue-600 mb-4" />
 
             <h3 className="text-xl font-semibold text-gray-700">
               Click to Upload
             </h3>
 
-            <p className="text-gray-500 mt-2">
-              PDF, DOCX, PPT, XLSX or TXT
-            </p>
+            <p className="text-gray-500 mt-2">PDF, DOCX, PPT, XLSX or TXT</p>
 
             <input
               id="fileUpload"
@@ -139,9 +122,7 @@ function UploadDocument() {
             </div>
 
             <div>
-              <p className="font-semibold text-gray-800">
-                {file.name}
-              </p>
+              <p className="font-semibold text-gray-800">{file.name}</p>
 
               <p className="text-sm text-gray-500">
                 {(file.size / 1024).toFixed(2)} KB

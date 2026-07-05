@@ -1,6 +1,5 @@
 const express = require("express");
 
-
 const router = express.Router();
 
 const upload = require("../middleware/uploadMiddleware");
@@ -12,35 +11,20 @@ const {
   getDocuments,
   deleteDocument,
   viewDocument,
-
 } = require("../controllers/documentController");
-
 
 router.post(
   "/upload",
   authMiddleware,
   adminMiddleware,
   upload.single("document"),
-  uploadDocument
+  uploadDocument,
 );
 
-router.get(
-  "/",
-  authMiddleware,
-  getDocuments
-);
+router.get("/", authMiddleware, getDocuments);
 
-router.delete(
-  "/:id",
-  authMiddleware,
-  deleteDocument
-);
+router.delete("/:id", authMiddleware, deleteDocument);
 
-router.get(
-  "/view/:id",
-  authMiddleware,
-  viewDocument
-);
+router.get("/view/:id", authMiddleware, viewDocument);
 
 module.exports = router;
-

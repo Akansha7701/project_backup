@@ -4,9 +4,7 @@ import { FaUsers, FaExclamationTriangle } from "react-icons/fa";
 import { toast } from "react-hot-toast";
 
 function Users() {
-  // ============================
   // States
-  // ============================
 
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
@@ -21,9 +19,7 @@ function Users() {
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("user");
 
-  // ============================
   // Fetch Users
-  // ============================
 
   useEffect(() => {
     fetchUsers();
@@ -33,14 +29,11 @@ function Users() {
     try {
       const token = localStorage.getItem("token");
 
-      const response = await axios.get(
-        "http://localhost:5000/api/users",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get("http://localhost:5000/api/users", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       setUsers(response.data);
     } catch (error) {
@@ -49,9 +42,7 @@ function Users() {
     }
   };
 
-  // ============================
   // Create User
-  // ============================
 
   const handleCreateUser = async () => {
     if (!name || !email || !password) {
@@ -73,7 +64,7 @@ function Users() {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       toast.success("User created successfully");
@@ -90,29 +81,21 @@ function Users() {
     } catch (error) {
       console.error(error);
 
-      toast.error(
-        error.response?.data?.message ||
-          "Failed to create user"
-      );
+      toast.error(error.response?.data?.message || "Failed to create user");
     }
   };
 
-  // ============================
   // Delete User
-  // ============================
 
   const deleteUser = async () => {
     try {
       const token = localStorage.getItem("token");
 
-      await axios.delete(
-        `http://localhost:5000/api/users/${selectedUserId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.delete(`http://localhost:5000/api/users/${selectedUserId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       toast.success("User deleted successfully");
 
@@ -126,32 +109,22 @@ function Users() {
     }
   };
 
-  // ============================
   // Search
-  // ============================
 
   const filteredUsers = users.filter((user) => {
     return (
-      user.name
-        .toLowerCase()
-        .includes(search.toLowerCase()) ||
-      user.email
-        .toLowerCase()
-        .includes(search.toLowerCase())
+      user.name.toLowerCase().includes(search.toLowerCase()) ||
+      user.email.toLowerCase().includes(search.toLowerCase())
     );
   });
 
-  // ============================
   // UI
-  // ============================
 
   return (
     <div className="p-4 md:p-8">
-
       {/* Header */}
 
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5 mb-8">
-
         <div>
           <h1 className="text-3xl md:text-4xl font-bold text-gray-800">
             User Management
@@ -174,13 +147,11 @@ function Users() {
         >
           + Add User
         </button>
-
       </div>
 
       {/* Search */}
 
       <div className="mb-6">
-
         <input
           type="text"
           placeholder="Search by name or email..."
@@ -188,78 +159,46 @@ function Users() {
           onChange={(e) => setSearch(e.target.value)}
           className="w-full md:w-96 border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
         />
-
       </div>
 
       {/* Table */}
 
       <div className="bg-white rounded-2xl shadow-lg overflow-x-auto">
-
         <table className="min-w-[700px] w-full">
-
           <thead className="bg-slate-100">
-
             <tr>
-
               <th className="p-4 text-left">User</th>
 
-              <th className="p-4 text-left">
-                Email
-              </th>
+              <th className="p-4 text-left">Email</th>
 
-              <th className="hidden md:table-cell p-4 text-left">
-                Role
-              </th>
+              <th className="hidden md:table-cell p-4 text-left">Role</th>
 
-              <th className="hidden md:table-cell p-4 text-left">
-                Joined
-              </th>
+              <th className="hidden md:table-cell p-4 text-left">Joined</th>
 
-              <th className="p-4 text-center">
-                Actions
-              </th>
-
+              <th className="p-4 text-center">Actions</th>
             </tr>
-
           </thead>
 
           <tbody>
-
             {filteredUsers.length > 0 ? (
-
               filteredUsers.map((user) => (
-
                 <tr
                   key={user.id}
                   className="border-t hover:bg-gray-50 transition"
                 >
-
                   <td className="p-4">
-
                     <div className="flex items-center gap-3">
-
                       <div className="w-11 h-11 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold">
-
                         {user.name.charAt(0).toUpperCase()}
-
                       </div>
 
-                      <span className="font-semibold">
-
-                        {user.name}
-
-                      </span>
-
+                      <span className="font-semibold">{user.name}</span>
                     </div>
-
                   </td>
 
-                  <td className="p-4">
-                    {user.email}
-                  </td>
+                  <td className="p-4">{user.email}</td>
 
                   <td className="hidden md:table-cell p-4">
-
                     <span
                       className={`px-3 py-1 rounded-full text-sm font-semibold ${
                         user.role === "admin"
@@ -269,19 +208,13 @@ function Users() {
                     >
                       {user.role}
                     </span>
-
                   </td>
 
                   <td className="hidden md:table-cell p-4">
-
-                    {new Date(
-                      user.created_at
-                    ).toLocaleDateString()}
-
+                    {new Date(user.created_at).toLocaleDateString()}
                   </td>
 
                   <td className="p-4 text-center">
-
                     <button
                       onClick={() => {
                         setSelectedUserId(user.id);
@@ -291,49 +224,31 @@ function Users() {
                     >
                       Delete
                     </button>
-
                   </td>
-
                 </tr>
-
               ))
-
             ) : (
-
               <tr>
-
                 <td colSpan="5">
-
                   <div className="text-center py-14">
-
                     <FaUsers className="mx-auto text-5xl text-gray-300 mb-4" />
 
-                    <p className="text-gray-500">
-                      No users found.
-                    </p>
-
+                    <p className="text-gray-500">No users found.</p>
                   </div>
-
                 </td>
-
               </tr>
-
             )}
-
           </tbody>
-
         </table>
-
       </div>
 
-            {/* ============================
+      {/* 
           Create User Modal
-      ============================ */}
+      */}
 
       {showModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8">
-
             <h2 className="text-2xl font-bold text-gray-800 mb-6">
               Create New User
             </h2>
@@ -411,26 +326,15 @@ function Users() {
         </div>
       )}
 
-      {/* ============================
-          Delete Confirmation Modal
-      ============================ */}
+      {/*  Delete Confirmation Modal */}
 
       {showDeleteModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8">
-
             <div className="flex justify-center mb-5">
-
               <div className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center">
-
-                <FaExclamationTriangle
-                  className="text-red-600"
-                  size={30}
-                />
-
+                <FaExclamationTriangle className="text-red-600" size={30} />
               </div>
-
             </div>
 
             <h2 className="text-2xl font-bold text-center text-gray-800">
@@ -446,7 +350,6 @@ function Users() {
             </p>
 
             <div className="flex justify-center gap-4 mt-8">
-
               <button
                 onClick={() => {
                   setShowDeleteModal(false);
@@ -463,14 +366,10 @@ function Users() {
               >
                 Delete User
               </button>
-
             </div>
-
           </div>
-
         </div>
       )}
-
     </div>
   );
 }

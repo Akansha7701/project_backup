@@ -7,7 +7,7 @@ const createUser = async (req, res) => {
 
     const existingUser = await pool.query(
       "SELECT * FROM users WHERE email = $1",
-      [email]
+      [email],
     );
 
     if (existingUser.rows.length > 0) {
@@ -24,14 +24,13 @@ const createUser = async (req, res) => {
       VALUES($1,$2,$3,$4)
       RETURNING id,name,email,role
       `,
-      [name, email, hashedPassword, role]
+      [name, email, hashedPassword, role],
     );
 
     res.status(201).json({
       message: "User created successfully",
       user: result.rows[0],
     });
-
   } catch (error) {
     console.log(error);
 
@@ -49,11 +48,10 @@ const getUsers = async (req, res) => {
 FROM users
 WHERE role = 'user'
 ORDER BY created_at DESC;
-      `
+      `,
     );
 
     res.json(result.rows);
-
   } catch (error) {
     console.log(error);
 
@@ -62,79 +60,6 @@ ORDER BY created_at DESC;
     });
   }
 };
-
-// const deleteUser = async (req, res) => {
-//   try {
-//     const { id } = req.params;
-
-//     await pool.query(
-//       `
-//       DELETE FROM users
-//       WHERE id=$1
-//       `,
-//       [id]
-//     );
-
-//     res.json({
-//       message: "User deleted successfully",
-//     });
-
-//   } catch (error) {
-//     console.log(error);
-
-//     res.status(500).json({
-//       message: "Delete failed",
-//     });
-//   }
-// };
-
-
-// const deleteUser = async (req, res) => {
-//   try {
-//     const { id } = req.params;
-
-//     // Delete user's chat history
-//     await pool.query(
-//       `
-//       DELETE FROM chat_history
-//       WHERE user_id = $1
-//       `,
-//       [id]
-//     );
-
-//     // Delete user's documents
-//     await pool.query(
-//       `
-//       DELETE FROM documents
-//       WHERE uploaded_by = $1
-//       `,
-//       [id]
-//     );
-
-//     // Finally delete the user
-//     await pool.query(
-//       `
-//       DELETE FROM users
-//       WHERE id = $1
-//       `,
-//       [id]
-//     );
-
-//     res.json({
-//       message: "User deleted successfully",
-//     });
-
-//   } catch (error) {
-//     console.log(error);
-
-//     res.status(500).json({
-//       message: "Delete failed",
-//     });
-//   }
-// };
-
-
-
 
 const deleteUser = async (req, res) => {
   try {
@@ -146,22 +71,20 @@ const deleteUser = async (req, res) => {
       DELETE FROM chat_history
       WHERE user_id = $1
       `,
-      [id]
+      [id],
     );
 
-    // Then delete the user
     await pool.query(
       `
       DELETE FROM users
       WHERE id = $1
       `,
-      [id]
+      [id],
     );
 
     res.json({
       message: "User deleted successfully",
     });
-
   } catch (error) {
     console.log(error);
 

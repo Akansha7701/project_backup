@@ -56,7 +56,9 @@ function Sidebar({ collapsed, setCollapsed }) {
         >
           {!collapsed && (
             <div>
-              <h2 className="text-xl font-bold">Intelligent Document Assistant</h2>
+              <h2 className="text-xl font-bold">
+                Intelligent Document Assistant
+              </h2>
 
               <p className="text-xs text-gray-400">Secure Document Portal</p>
             </div>
@@ -90,13 +92,11 @@ function Sidebar({ collapsed, setCollapsed }) {
               </li>
 
               <li>
-  <NavLink to="/users" className={navClass}>
-    <FaUsers />
-    {!collapsed && <span>Users</span>}
-  </NavLink>
-</li>
-
-
+                <NavLink to="/users" className={navClass}>
+                  <FaUsers />
+                  {!collapsed && <span>Users</span>}
+                </NavLink>
+              </li>
 
               <li>
                 <NavLink to="/query" className={navClass}>
@@ -115,13 +115,6 @@ function Sidebar({ collapsed, setCollapsed }) {
               </NavLink>
             </li>
           )}
-
-          {/* <li>
-            <NavLink to="/profile" className={navClass}>
-              <FaUser />
-              {!collapsed && <span>Profile</span>}
-            </NavLink>
-          </li> */}
 
           <li>
             <button

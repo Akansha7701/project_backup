@@ -4,18 +4,11 @@ const jwt = require("jsonwebtoken");
 
 const register = async (req, res) => {
   try {
-    // const { name, email, password } = req.body;
-
-    const {
-  name,
-  email,
-  password,
-  role = "user",
-} = req.body;
+    const { name, email, password, role = "user" } = req.body;
 
     const existingUser = await pool.query(
       "SELECT * FROM users WHERE email=$1",
-      [email]
+      [email],
     );
 
     if (existingUser.rows.length > 0) {
@@ -30,14 +23,13 @@ const register = async (req, res) => {
       `INSERT INTO users(name,email,password,role)
        VALUES($1,$2,$3, $4)
        RETURNING id,name,email,role`,
-      [name, email, hashedPassword, role]
+      [name, email, hashedPassword, role],
     );
 
     res.status(201).json({
       message: "User Registered",
       user: result.rows[0],
     });
-
   } catch (err) {
     console.error(err);
     res.status(500).json({
@@ -50,10 +42,9 @@ const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const userResult = await pool.query(
-      "SELECT * FROM users WHERE email=$1",
-      [email]
-    );
+    const userResult = await pool.query("SELECT * FROM users WHERE email=$1", [
+      email,
+    ]);
 
     if (userResult.rows.length === 0) {
       return res.status(400).json({
@@ -61,27 +52,18 @@ const login = async (req, res) => {
       });
     }
 
-    // const user = userResult.rows[0];
-
-    // const isMatch = await bcrypt.compare(
-    //   password,
-    //   user.password
-    // );
-
-
     const user = userResult.rows[0];
 
-console.log("========== LOGIN DEBUG ==========");
-console.log("Email entered:", email);
-console.log("Password entered:", password);
-console.log("User from DB:", user.email);
-console.log("Hash from DB:", user.password);
+    console.log("========== LOGIN DEBUG ==========");
+    console.log("Email entered:", email);
+    console.log("Password entered:", password);
+    console.log("User from DB:", user.email);
+    console.log("Hash from DB:", user.password);
 
-const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, user.password);
 
-console.log("Password Match:", isMatch);
-console.log("================================");
-
+    console.log("Password Match:", isMatch);
+    console.log("================================");
 
     if (!isMatch) {
       return res.status(400).json({
@@ -97,18 +79,18 @@ console.log("================================");
       process.env.JWT_SECRET,
       {
         expiresIn: "1d",
-      }
+      },
     );
 
     res.json({
-  token,
-  user: {
-    id: user.id,
-    name: user.name,
-    email: user.email,
-    role: user.role,
-  },
-});
+      token,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({
@@ -116,8 +98,6 @@ console.log("================================");
     });
   }
 };
-
-
 
 const profile = async (req, res) => {
   try {
@@ -125,11 +105,10 @@ const profile = async (req, res) => {
       `SELECT id,name,email,role
        FROM users
        WHERE id=$1`,
-      [req.user.id]
+      [req.user.id],
     );
 
     res.json(user.rows[0]);
-
   } catch (err) {
     console.error(err);
 
@@ -138,7 +117,6 @@ const profile = async (req, res) => {
     });
   }
 };
-
 
 module.exports = {
   register,

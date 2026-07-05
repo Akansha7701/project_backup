@@ -92,6 +92,9 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import AdminRoute from "./components/AdminRoute";
 import MainLayout from "./layouts/MainLayout";
 
+
+import Users from "./pages/Users";
+
 function App() {
   return (
     <Routes>
@@ -124,6 +127,17 @@ function App() {
             </AdminRoute>
           }
         />
+
+        <Route
+  path="/users"
+  element={
+    <AdminRoute>
+      <Users />
+    </AdminRoute>
+  }
+/>
+
+
 
         {/* <Route path="/profile" element={<Profile />} /> */}
         <Route path="/query" element={<Query />} />

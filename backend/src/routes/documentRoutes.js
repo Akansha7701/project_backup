@@ -16,7 +16,6 @@ const {
 } = require("../controllers/documentController");
 
 
-
 router.post(
   "/upload",
   authMiddleware,
@@ -44,3 +43,4 @@ router.get(
 );
 
 module.exports = router;
+

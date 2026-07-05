@@ -1,50 +1,53 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { FaFileAlt, FaComments } from "react-icons/fa";
 
-function RecentActivity() {
-  const [activities, setActivities] = useState([]);
-
-  useEffect(() => {
-    fetchActivities();
-  }, []);
-
-  const fetchActivities = async () => {
-    try {
-      const token = localStorage.getItem("token");
-
-      const response = await axios.get(
-        // "http://localhost:5000/api/query/history",
-        "http://localhost:5000/api/documents",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      setActivities(response.data.slice(0, 5));
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
+function RecentActivity({ activities }) {
   return (
-    <div className="bg-white rounded-xl shadow-md p-6">
-      <h2 className="text-xl font-bold mb-4">
+    <div className="bg-white rounded-2xl shadow-lg p-6">
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">
         Recent Activity
       </h2>
 
       {activities.length === 0 ? (
-        <p>No activity yet</p>
+        <p className="text-gray-500">No recent activity.</p>
       ) : (
-        <ul className="space-y-3">
-          {activities.map((item) => (
-            <li key={item.id}>
-              {/* ❓ {item.query} */}
-              {item.filename} uploaded
-            </li>
+        <div className="space-y-4">
+          {activities.map((activity, index) => (
+            <div
+              key={index}
+              className="flex items-center gap-4 border-b pb-4 last:border-none"
+            >
+              <div
+                className={`p-3 rounded-full ${
+                  activity.type === "document"
+                    ? "bg-blue-100 text-blue-600"
+                    : "bg-green-100 text-green-600"
+                }`}
+              >
+                {activity.type === "document" ? (
+                  <FaFileAlt />
+                ) : (
+                  <FaComments />
+                )}
+              </div>
+
+              <div className="flex-1">
+                <p className="font-semibold text-gray-800 break-words">
+                  {activity.text}
+                </p>
+
+                <p className="text-sm text-gray-500">
+                  {activity.type === "document"
+                    ? "Document Uploaded"
+                    : "Query Asked"}
+                </p>
+
+                <p className="text-xs text-gray-400 mt-1">
+                  {new Date(activity.time).toLocaleString()}
+                </p>
+              </div>
+            </div>
           ))}
-        </ul>
+        </div>
       )}
     </div>
   );

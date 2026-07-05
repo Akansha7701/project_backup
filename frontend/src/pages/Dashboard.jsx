@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+
 import DashboardCard from "../components/DashboardCard";
 import RecentActivity from "../components/RecentActivity";
 
@@ -11,60 +12,80 @@ import {
 } from "react-icons/fa";
 
 function Dashboard() {
-  const [documentsCount, setDocumentsCount] = useState(0);
-  const [latestUpload, setLatestUpload] = useState("No documents uploaded");
-  const [queryCount, setQueryCount] = useState(0);
+  const [stats, setStats] = useState({
+  totalUsers: 0,
+  totalDocuments: 0,
+  totalQueries: 0,
+});
 
-  const role = localStorage.getItem("role");
+const role = localStorage.getItem("role");
 
   useEffect(() => {
-    fetchDocumentsCount();
-    fetchQueryHistory();
-  }, []);
+  fetchDashboardStats();
+}, []);
 
-  const fetchDocumentsCount = async () => {
-    try {
-      const token = localStorage.getItem("token");
+  // const fetchDocumentsCount = async () => {
+  //   try {
+  //     const token = localStorage.getItem("token");
 
-      const response = await axios.get(
-        "http://localhost:5000/api/documents",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+  //     const response = await axios.get(
+  //       "http://localhost:5000/api/documents",
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
 
-      const docs = response.data;
+  //     const docs = response.data;
 
-      setDocumentsCount(docs.length);
+  //     setDocumentsCount(docs.length);
 
-      if (docs.length > 0) {
-        setLatestUpload(docs[0].filename);
+  //     if (docs.length > 0) {
+  //       setLatestUpload(docs[0].filename);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
+  // const fetchQueryHistory = async () => {
+  //   try {
+  //     const token = localStorage.getItem("token");
+
+  //     const response = await axios.get(
+  //       "http://localhost:5000/api/query/history",
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
+
+  //     setQueryCount(response.data.length);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
+  const fetchDashboardStats = async () => {
+  try {
+    const token = localStorage.getItem("token");
+
+    const response = await axios.get(
+      "http://localhost:5000/api/dashboard/stats",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    );
 
-  const fetchQueryHistory = async () => {
-    try {
-      const token = localStorage.getItem("token");
-
-      const response = await axios.get(
-        "http://localhost:5000/api/query/history",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      setQueryCount(response.data.length);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    setStats(response.data);
+  } catch (error) {
+    console.error(error);
+  }
+};
 
   return (
     <>
@@ -81,7 +102,7 @@ function Dashboard() {
 
             <p className="mt-3 text-lg text-blue-100">
               {role === "admin"
-                ? "Manage documents, monitor AI queries and oversee the complete document management system."
+                ? "Manage documents, monitor  queries and oversee the complete document management system."
                 : "Access documents, submit AI queries and manage your profile securely."}
             </p>
           </div>
@@ -90,37 +111,33 @@ function Dashboard() {
 
       {/* Dashboard Cards */}
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <DashboardCard
-          title={
-            role === "admin"
-              ? "Total Documents"
-              : "Available Documents"
-          }
-          value={documentsCount}
-          icon={<FaFileAlt />}
-        />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
-        <DashboardCard
-          title={
-            role === "admin"
-              ? "Total Queries"
-              : "My Queries"
-          }
-          value={queryCount}
-          icon={<FaComments />}
-        />
+  {role === "admin" && (
+    <DashboardCard
+      title="Total Users"
+      value={stats.totalUsers}
+      icon="👥"
+    />
+  )}
 
-        <DashboardCard
-          title="Recent Activity"
-          value={documentsCount}
-          icon={<FaHistory />}
-        />
-      </div>
+  <DashboardCard
+    title="Total Documents"
+    value={stats.totalDocuments}
+    icon={<FaFileAlt />}
+  />
+
+  <DashboardCard
+    title={role === "admin" ? "Total Queries" : "My Queries"}
+    value={stats.totalQueries}
+    icon={<FaComments />}
+  />
+
+</div>
 
       {/* Latest Uploaded Document */}
 
-      <div className="bg-white rounded-2xl shadow-md mt-8 p-6 border border-gray-100">
+      {/* <div className="bg-white rounded-2xl shadow-md mt-8 p-6 border border-gray-100">
         <h2 className="text-xl font-bold text-gray-800 mb-4">
           Latest Uploaded Document
         </h2>
@@ -140,12 +157,14 @@ function Dashboard() {
             <FaFileAlt size={28} />
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Recent Activity */}
 
       <div className="mt-8">
-        <RecentActivity />
+        <RecentActivity
+  activities={stats.recentActivity || []}
+/>
       </div>
     </>
   );

@@ -17,6 +17,7 @@ CREATE TABLE documents(
     filename VARCHAR(255) NOT NULL,
     filetype VARCHAR(100),
     filepath TEXT NOT NULL,
+    ADD COLUMN title VARCHAR(255);
     uploaded_by INTEGER REFERENCES users(id),
     upload_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

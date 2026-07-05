@@ -58,7 +58,33 @@ const getQueryHistory = async (req, res) => {
   }
 };
 
+
+
+const clearChatHistory = async (req, res) => {
+  try {
+    await pool.query(
+      `
+      DELETE FROM chat_history
+      WHERE user_id = $1
+      `,
+      [req.user.id]
+    );
+
+    res.status(200).json({
+      message: "Chat history cleared successfully",
+    });
+
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      message: "Failed to clear chat history",
+    });
+  }
+};
+
 module.exports = {
   askQuery,
   getQueryHistory,
+  clearChatHistory,
 };

@@ -1,13 +1,13 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { FaBars } from "react-icons/fa";
+
 import {
   FaHome,
   FaFileAlt,
   FaUpload,
-  FaUser,
+  FaUsers,
   FaSignOutAlt,
   FaComments,
-  FaShieldAlt,
 } from "react-icons/fa";
 
 function Sidebar({ collapsed, setCollapsed }) {
@@ -88,6 +88,15 @@ function Sidebar({ collapsed, setCollapsed }) {
                   {!collapsed && <span>Upload</span>}
                 </NavLink>
               </li>
+
+              <li>
+  <NavLink to="/users" className={navClass}>
+    <FaUsers />
+    {!collapsed && <span>Users</span>}
+  </NavLink>
+</li>
+
+
 
               <li>
                 <NavLink to="/query" className={navClass}>

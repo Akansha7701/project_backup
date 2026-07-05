@@ -5,6 +5,7 @@ const authRoutes = require("./routes/authRoutes");
 const documentRoutes = require("./routes/documentRoutes");
 const queryRoutes = require("./routes/queryRoutes");
 const userRoutes = require("./routes/userRoutes");
+const dashboardRoutes = require("./routes/dashboardRoutes");
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/documents", documentRoutes);
 app.use("/api/query", queryRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 app.get("/", (req, res) => {
   res.send("DRDO Backend Running");

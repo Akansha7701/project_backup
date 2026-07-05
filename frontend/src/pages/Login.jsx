@@ -146,14 +146,18 @@ function Login() {
             />
 
             <input
-              type="email"
-              placeholder="Email Address"
-              className="w-full border border-gray-300 rounded-lg p-3 pl-11 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
+  type="email"
+  name="username"
+  autoComplete="off"
+  placeholder="Email Address"
+  className="w-full border border-gray-300 rounded-lg p-3 pl-11 focus:outline-none focus:ring-2 focus:ring-blue-500"
+  value={email}
+  onChange={(e) => setEmail(e.target.value)}
+/>
           </div>
+
+        
+
 
           {/* Password */}
           <div className="relative mb-4">
@@ -163,13 +167,14 @@ function Login() {
             />
 
             <input
-              type={showPassword ? "text" : "password"}
-              placeholder="Password"
-              className="w-full border border-gray-300 rounded-lg p-3 pl-11 pr-12 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+  type={showPassword ? "text" : "password"}
+  name="password"
+  autoComplete="new-password"
+  placeholder="Password"
+  className="w-full border border-gray-300 rounded-lg p-3 pl-11 pr-12"
+  value={password}
+  onChange={(e) => setPassword(e.target.value)}
+/>
 
             <button
               type="button"
@@ -181,7 +186,7 @@ function Login() {
           </div>
 
           {/* Remember Me */}
-          <div className="flex items-center justify-between mb-6 text-sm">
+          {/* <div className="flex items-center justify-between mb-6 text-sm">
             <label className="flex items-center gap-2 text-gray-600 cursor-pointer">
               <input
                 type="checkbox"
@@ -196,7 +201,7 @@ function Login() {
             >
               Forgot Password?
             </button>
-          </div>
+          </div> */}
 
           {/* Login Button */}
           <button

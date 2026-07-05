@@ -45,14 +45,10 @@ const getUsers = async (req, res) => {
   try {
     const result = await pool.query(
       `
-      SELECT
-      id,
-      name,
-      email,
-      role,
-      created_at
-      FROM users
-      ORDER BY created_at DESC
+      SELECT id, name, email, role, created_at
+FROM users
+WHERE role = 'user'
+ORDER BY created_at DESC;
       `
     );
 
@@ -67,14 +63,97 @@ const getUsers = async (req, res) => {
   }
 };
 
+// const deleteUser = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+
+//     await pool.query(
+//       `
+//       DELETE FROM users
+//       WHERE id=$1
+//       `,
+//       [id]
+//     );
+
+//     res.json({
+//       message: "User deleted successfully",
+//     });
+
+//   } catch (error) {
+//     console.log(error);
+
+//     res.status(500).json({
+//       message: "Delete failed",
+//     });
+//   }
+// };
+
+
+// const deleteUser = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+
+//     // Delete user's chat history
+//     await pool.query(
+//       `
+//       DELETE FROM chat_history
+//       WHERE user_id = $1
+//       `,
+//       [id]
+//     );
+
+//     // Delete user's documents
+//     await pool.query(
+//       `
+//       DELETE FROM documents
+//       WHERE uploaded_by = $1
+//       `,
+//       [id]
+//     );
+
+//     // Finally delete the user
+//     await pool.query(
+//       `
+//       DELETE FROM users
+//       WHERE id = $1
+//       `,
+//       [id]
+//     );
+
+//     res.json({
+//       message: "User deleted successfully",
+//     });
+
+//   } catch (error) {
+//     console.log(error);
+
+//     res.status(500).json({
+//       message: "Delete failed",
+//     });
+//   }
+// };
+
+
+
+
 const deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
 
+    // Delete chat history first
+    await pool.query(
+      `
+      DELETE FROM chat_history
+      WHERE user_id = $1
+      `,
+      [id]
+    );
+
+    // Then delete the user
     await pool.query(
       `
       DELETE FROM users
-      WHERE id=$1
+      WHERE id = $1
       `,
       [id]
     );

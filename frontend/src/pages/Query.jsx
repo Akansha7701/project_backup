@@ -2,6 +2,8 @@ import { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
+import { FaTrash } from "react-icons/fa";
+import Swal from "sweetalert2";
 import {
   FaRobot,
   FaUser,
@@ -16,10 +18,99 @@ function Query() {
   const chatEndRef = useRef(null);
 
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({
-      behavior: "smooth",
+  fetchHistory();
+}, []);
+
+useEffect(() => {
+  chatEndRef.current?.scrollIntoView({
+    behavior: "smooth",
+  });
+}, [messages, loading]);
+
+const fetchHistory = async () => {
+  try {
+    const token = localStorage.getItem("token");
+
+    const response = await axios.get(
+      "http://localhost:5000/api/query/history",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const history = [];
+
+    response.data
+      .reverse()
+      .forEach((chat) => {
+        history.push({
+          sender: "user",
+          text: chat.query,
+        });
+
+        history.push({
+          sender: "bot",
+          text: chat.response,
+        });
+      });
+
+    setMessages(history);
+
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const handleClearChat = async () => {
+  const result = await Swal.fire({
+    icon: "warning",
+    title: "Clear Chat History",
+    text: "This will permanently delete all your chat history.",
+    showCancelButton: true,
+    confirmButtonText: "Clear Chat",
+    cancelButtonText: "Cancel",
+    confirmButtonColor: "#dc2626",
+  });
+
+  if (!result.isConfirmed) return;
+
+  try {
+    const token = localStorage.getItem("token");
+
+    await axios.delete(
+      "http://localhost:5000/api/query/history",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    setMessages([]);
+
+    Swal.fire({
+      icon: "success",
+      title: "Chat Cleared",
+      text: "Your chat history has been deleted.",
+      timer: 1500,
+      showConfirmButton: false,
     });
-  }, [messages, loading]);
+
+  } catch (error) {
+    console.log(error);
+    console.log(error.response);
+
+    Swal.fire({
+      icon: "error",
+      title: "Failed",
+      text:
+        error.response?.data?.message ||
+        "Unable to clear chat history.",
+    });
+  }
+};
 
   const handleAsk = async () => {
     if (!question.trim()) {
@@ -61,12 +152,18 @@ function Query() {
           text: result.data.answer,
         },
       ]);
-    } catch (error) {
-      console.log(error);
-      toast.error("Failed to process query");
-    } finally {
-      setLoading(false);
-    }
+    } 
+    catch (error) {
+  console.log("Error:", error);
+  console.log("Response:", error.response);
+  console.log("Data:", error.response?.data);
+
+  toast.error(
+    error.response?.data?.message || "Failed to process query"
+  );
+} finally {
+  setLoading(false);
+}
   };
 
   return (
@@ -90,19 +187,29 @@ function Query() {
 
         {/* Top */}
 
-        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-5 flex items-center gap-3">
+        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-5 flex justify-between items-center">
 
-          <FaRobot size={24} />
+          <div className="flex items-center gap-3">
+  <FaRobot size={24} />
 
-          <div>
-            <h2 className="font-semibold text-lg">
-              DRDO Assistant
-            </h2>
+  <div>
+    <h2 className="font-semibold text-lg">
+      DRDO Assistant
+    </h2>
 
-            <p className="text-blue-100 text-sm">
-              Online
-            </p>
-          </div>
+    <p className="text-blue-100 text-sm">
+      Online
+    </p>
+  </div>
+</div>
+
+<button
+  onClick={handleClearChat}
+  className="flex items-center gap-2 bg-white/20 hover:bg-red-500 px-4 py-2 rounded-xl transition"
+>
+  <FaTrash />
+  Clear Chat
+</button>
 
         </div>
 

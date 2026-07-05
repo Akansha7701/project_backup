@@ -8,12 +8,12 @@ const {
 
 const authenticateToken = require("../middleware/authMiddleware");
 
-const authorizeAdmin = require("../middleware/adminMiddleware");
+
 
 router.get(
   "/stats",
   authenticateToken,
-  authorizeAdmin,
+  //authorizeAdmin,
   getDashboardStats
 );
 

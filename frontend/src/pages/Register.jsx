@@ -73,7 +73,7 @@ const [loading, setLoading] = useState(false);
 </h1>
 
 <p className="text-slate-500 mt-2">
-  Create your DRDO Assistant account
+  Create your account
 </p>
       </div>
 

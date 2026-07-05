@@ -56,7 +56,7 @@ function Sidebar({ collapsed, setCollapsed }) {
         >
           {!collapsed && (
             <div>
-              <h2 className="text-xl font-bold">DRDO Assistant</h2>
+              <h2 className="text-xl font-bold">Intelligent Document Assistant</h2>
 
               <p className="text-xs text-gray-400">Secure Document Portal</p>
             </div>

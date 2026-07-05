@@ -173,7 +173,7 @@ const handleClearChat = async () => {
 
       <div className="mb-6">
         {/* <h1 className="text-4xl font-bold text-gray-800">
-          DRDO AI Assistant
+           AI Assistant
         </h1> */}
 
         <p className="text-gray-500 mt-2">
@@ -194,7 +194,7 @@ const handleClearChat = async () => {
 
   <div>
     <h2 className="font-semibold text-lg">
-      DRDO Assistant
+      Document Assistant
     </h2>
 
     <p className="text-blue-100 text-sm">

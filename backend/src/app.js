@@ -19,7 +19,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 
 app.get("/", (req, res) => {
-  res.send("DRDO Backend Running");
+  res.send("Documeent Managament API Running");
 });
 
 module.exports = app;

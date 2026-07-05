@@ -9,7 +9,7 @@ function Navbar({ collapsed }) {
       }}
     >
       <h2 className="text-2xl font-bold text-gray-800">
-        DRDO Intelligent Document Assistant
+        Intelligent Document Assistant
       </h2>
 
       <div className="flex items-center gap-3">

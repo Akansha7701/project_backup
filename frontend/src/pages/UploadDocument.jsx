@@ -70,7 +70,7 @@ function UploadDocument() {
         </h1>
 
         <p className="text-gray-500 mt-2">
-          Securely upload documents to the DRDO Intelligent Document Assistant.
+          Securely upload documents to the  Intelligent Document Assistant.
         </p>
       </div>
 
